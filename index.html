@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lx Data Converter</title>
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none';">
+<title>Lx Data Converter Pro</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -196,9 +197,13 @@ body {
   opacity: 0;
   transition: opacity 0.4s var(--ease);
 }
-.dropzone:hover, .dropzone.dragover {
+.dropzone:hover, .dropzone.dragover, .dropzone:focus-visible {
   border-color: var(--accent);
   transform: translateY(-2px);
+}
+.dropzone:focus-visible, .injector-card:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .dropzone:hover::before, .dropzone.dragover::before {
   opacity: 1;
@@ -277,6 +282,11 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--ink);
+}
+.btn-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 .badge {
   font-family: 'JetBrains Mono', monospace;
@@ -430,7 +440,7 @@ textarea:focus {
       <span>Deploy</span>
     </div>
   </div>
-  <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+  <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload spreadsheet file" onclick="document.getElementById('fileInput').click()">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
     </svg>
@@ -444,21 +454,30 @@ textarea:focus {
       <div class="card">
         <div class="card-header">
           <h2>Modern<span class="badge badge-modern">Paid + Free</span></h2>
-          <button id="btnModern">Copy</button>
+          <div class="btn-row">
+            <button id="btnModern">Copy</button>
+            <button id="saveModern">Save .js</button>
+          </div>
         </div>
         <textarea id="outModern" readonly></textarea>
       </div>
       <div class="card">
         <div class="card-header">
           <h2>Raw<span class="badge badge-raw">Paid</span></h2>
-          <button id="btnRaw">Copy</button>
+          <div class="btn-row">
+            <button id="btnRaw">Copy</button>
+            <button id="saveRaw">Save .js</button>
+          </div>
         </div>
         <textarea id="outRaw" readonly></textarea>
       </div>
       <div class="card">
         <div class="card-header">
           <h2>Legacy<span class="badge badge-legacy">Free</span></h2>
-          <button id="btnLegacy">Copy</button>
+          <div class="btn-row">
+            <button id="btnLegacy">Copy</button>
+            <button id="saveLegacy">Save .js</button>
+          </div>
         </div>
         <textarea id="outLegacy" readonly></textarea>
       </div>
@@ -467,19 +486,19 @@ textarea:focus {
   <div id="injectorSection" class="hidden">
     <h2 class="section-title">Inject & Download</h2>
     <div class="grid">
-      <div class="card injector-card" onclick="document.getElementById('htmlModern').click()">
+      <div class="card injector-card" tabindex="0" role="button" aria-label="Upload Modern HTML file to inject" onclick="document.getElementById('htmlModern').click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('htmlModern').click();}">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8.25 3v2.25M15.75 3v2.25M5.25 6.75h13.5A1.5 1.5 0 0120.25 8.25v10.5a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5z" /></svg>
         <h2>Modern HTML</h2>
         <p>Upload file to inject</p>
         <input type="file" id="htmlModern" accept=".html" class="hidden" onchange="handleHTMLUpload(event, 'modern')">
       </div>
-      <div class="card injector-card" onclick="document.getElementById('htmlRaw').click()">
+      <div class="card injector-card" tabindex="0" role="button" aria-label="Upload Raw Paid HTML file to inject" onclick="document.getElementById('htmlRaw').click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('htmlRaw').click();}">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8.25 3v2.25M15.75 3v2.25M5.25 6.75h13.5A1.5 1.5 0 0120.25 8.25v10.5a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5z" /></svg>
         <h2>Raw Paid HTML</h2>
         <p>Upload file to inject</p>
         <input type="file" id="htmlRaw" accept=".html" class="hidden" onchange="handleHTMLUpload(event, 'raw')">
       </div>
-      <div class="card injector-card" onclick="document.getElementById('htmlLegacy').click()">
+      <div class="card injector-card" tabindex="0" role="button" aria-label="Upload Legacy HTML file to inject" onclick="document.getElementById('htmlLegacy').click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('htmlLegacy').click();}">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8.25 3v2.25M15.75 3v2.25M5.25 6.75h13.5A1.5 1.5 0 0120.25 8.25v10.5a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5z" /></svg>
         <h2>Legacy HTML</h2>
         <p>Upload file to inject</p>
@@ -505,7 +524,8 @@ const generatedData = {
   paidModernStr: "[]",
   freeModernStr: "[]",
   rawPaidStr: "[]",
-  legacyFreeStr: "[]"
+  legacyFreeStr: "[]",
+  counts: { paid: 0, free: 0, total: 0 }
 };
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -530,7 +550,25 @@ dropzone.addEventListener('drop', e => {
 fileInput.addEventListener('change', e => {
   if (e.target.files[0]) handleExcel(e.target.files[0]);
 });
+dropzone.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    fileInput.click();
+  }
+});
 function handleExcel(file) {
+  const validExt = /\.(xlsx|xls)$/i.test(file.name);
+  const maxBytes = 25 * 1024 * 1024;
+  if (!validExt) {
+    dropText.textContent = "Please choose an .xlsx or .xls file.";
+    showToast("Unsupported file type");
+    return;
+  }
+  if (file.size > maxBytes) {
+    dropText.textContent = "File is too large (25MB limit).";
+    showToast("File too large");
+    return;
+  }
   dropText.textContent = `Processing ${file.name}...`;
   const reader = new FileReader();
   reader.onload = e => {
@@ -540,15 +578,21 @@ function handleExcel(file) {
       const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
       const json = XLSX.utils.sheet_to_json(firstSheet, {defval: null});
       processData(json);
-      dropText.textContent = `Processed ${json.length} items from ${file.name}`;
+      const c = generatedData.counts;
+      dropText.textContent = `Processed ${json.length} items from ${file.name} — ${c.paid} paid, ${c.free} free`;
       outputSection.classList.remove('hidden');
       outputSection.classList.add('fade-in');
       injectorSection.classList.remove('hidden');
       injectorSection.classList.add('fade-in');
       showToast("Excel data successfully converted!");
     } catch (err) {
-      dropText.textContent = "Error parsing file.";
+      dropText.textContent = `Error parsing file: ${err.message || 'unknown error'}`;
+      showToast("Could not parse the file");
     }
+  };
+  reader.onerror = () => {
+    dropText.textContent = "Could not read the file.";
+    showToast("File read failed");
   };
   reader.readAsArrayBuffer(file);
 }
@@ -601,38 +645,62 @@ function processData(data) {
   document.getElementById('outModern').value = `const paidData = ${generatedData.paidModernStr};\n\nconst freeData = ${generatedData.freeModernStr};`;
   document.getElementById('outRaw').value = `const rawData = ${generatedData.rawPaidStr};`;
   document.getElementById('outLegacy').value = `const drugs = ${generatedData.legacyFreeStr};`;
+  generatedData.counts = { paid: paidModern.length, free: freeModern.length, total: data.length };
 }
 function handleHTMLUpload(event, type) {
   const file = event.target.files[0];
   if (!file) return;
+  if (!/\.html?$/i.test(file.name)) {
+    alert("Please choose an .html file.");
+    event.target.value = '';
+    return;
+  }
   const reader = new FileReader();
   reader.onload = e => {
     const htmlContent = e.target.result;
-    const newHtml = injectDataIntoHTML(htmlContent, type);
-    if (newHtml !== htmlContent) {
-      downloadFile(newHtml, `updated_${file.name}`);
-      showToast(`Successfully updated ${file.name}`);
+    const result = injectDataIntoHTML(htmlContent, type);
+    if (result.matchedAny) {
+      downloadFile(result.html, `updated_${file.name}`);
+      if (result.allMatched) {
+        showToast(`Successfully updated ${file.name}`);
+      } else {
+        showToast(`Updated ${file.name} — missing: ${result.missing.join(', ')}`);
+      }
     } else {
       alert("Could not find the target arrays in the uploaded HTML.");
     }
+  };
+  reader.onerror = () => {
+    alert("Could not read the uploaded HTML file.");
   };
   reader.readAsText(file);
   event.target.value = '';
 }
 function injectDataIntoHTML(html, type) {
   let res = html;
+  const matched = [];
+  const missing = [];
+  const applyTarget = (varName, value) => {
+    const pattern = new RegExp(`(const\\s+${varName}\\s*=\\s*)\\[[\\s\\S]*?\\];`, 'g');
+    if (pattern.test(res)) {
+      matched.push(varName);
+      res = res.replace(new RegExp(`(const\\s+${varName}\\s*=\\s*)\\[[\\s\\S]*?\\];`, 'g'), (full, prefix) => `${prefix}${value};`);
+    } else {
+      missing.push(varName);
+    }
+  };
   if (type === 'modern') {
-    res = res.replace(/(const\s+paidData\s*=\s*)\[[\s\S]*?\];/g, `$1${generatedData.paidModernStr};`);
-    res = res.replace(/(const\s+freeData\s*=\s*)\[[\s\S]*?\];/g, `$1${generatedData.freeModernStr};`);
+    applyTarget('paidData', generatedData.paidModernStr);
+    applyTarget('freeData', generatedData.freeModernStr);
   } else if (type === 'raw') {
-    res = res.replace(/(const\s+rawData\s*=\s*)\[[\s\S]*?\];/g, `$1${generatedData.rawPaidStr};`);
+    applyTarget('rawData', generatedData.rawPaidStr);
   } else if (type === 'legacy') {
-    res = res.replace(/(const\s+drugs\s*=\s*)\[[\s\S]*?\];/g, `$1${generatedData.legacyFreeStr};`);
+    applyTarget('drugs', generatedData.legacyFreeStr);
   }
-  return res;
+  return { html: res, matchedAny: matched.length > 0, allMatched: missing.length === 0, matched, missing };
 }
-function downloadFile(content, filename) {
-  const blob = new Blob([content], { type: 'text/html' });
+function downloadFile(content, filename, mimeType = 'text/html') {
+  const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -662,6 +730,16 @@ function setupCopyBtn(btnId, txtId) {
 setupCopyBtn('btnModern', 'outModern');
 setupCopyBtn('btnRaw', 'outRaw');
 setupCopyBtn('btnLegacy', 'outLegacy');
+function setupSaveBtn(btnId, txtId, filename) {
+  document.getElementById(btnId).addEventListener('click', () => {
+    const txt = document.getElementById(txtId);
+    downloadFile(txt.value, filename, 'text/javascript');
+    showToast(`Saved ${filename}`);
+  });
+}
+setupSaveBtn('saveModern', 'outModern', 'lx-modern-data.js');
+setupSaveBtn('saveRaw', 'outRaw', 'lx-raw-paid-data.js');
+setupSaveBtn('saveLegacy', 'outLegacy', 'lx-legacy-data.js');
 let toastTimeout;
 function showToast(msg) {
   const toast = document.getElementById('toast');
