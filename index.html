@@ -3,36 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lx Data Converter Pro</title>
+<title>Lx Data Converter</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #FDFCF9;
+  --bg: #F2F4F0;
   --surface: #FFFFFF;
-  --ink: #1C1B1A;
-  --ink-muted: #7A7774;
-  --border: #F0EDE8;
-  --border-hover: #E3DFD8;
-  --accent: #C68A3F;
-  --accent-soft: rgba(198, 138, 63, 0.1);
-  --shadow: 0 20px 40px -10px rgba(0,0,0,0.03), 0 8px 16px -4px rgba(0,0,0,0.02);
-  --radius-lg: 32px;
-  --radius-md: 20px;
-  --radius-sm: 12px;
+  --surface-alt: #E9ECE5;
+  --ink: #11181A;
+  --ink-muted: #69746E;
+  --border: #E1E6DD;
+  --border-hover: #C9D0C3;
+  --accent: #2E6C5E;
+  --accent-ink: #FFFFFF;
+  --accent-soft: rgba(46, 108, 94, 0.09);
+  --accent-2: #B78E4E;
+  --accent-2-soft: rgba(183, 142, 78, 0.12);
+  --shadow: 0 24px 48px -16px rgba(17, 24, 26, 0.08), 0 6px 14px -6px rgba(17, 24, 26, 0.05);
+  --shadow-sm: 0 2px 8px -2px rgba(17, 24, 26, 0.06);
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 10px;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #121110;
-    --surface: #1A1918;
-    --ink: #F5F3F0;
-    --ink-muted: #9E9A96;
-    --border: #2A2826;
-    --border-hover: #3A3734;
-    --accent: #E3AC5E;
-    --accent-soft: rgba(227, 172, 94, 0.1);
-    --shadow: 0 20px 40px -10px rgba(0,0,0,0.4), 0 8px 16px -4px rgba(0,0,0,0.2);
+    --bg: #0C1211;
+    --surface: #141B19;
+    --surface-alt: #1A211E;
+    --ink: #EAEDE9;
+    --ink-muted: #8C968F;
+    --border: #212B27;
+    --border-hover: #313D37;
+    --accent: #58B39E;
+    --accent-ink: #08120F;
+    --accent-soft: rgba(88, 179, 158, 0.12);
+    --accent-2: #D9B579;
+    --accent-2-soft: rgba(217, 181, 121, 0.14);
+    --shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.45), 0 6px 14px -6px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.35);
   }
 }
 * {
@@ -43,40 +54,133 @@
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% -10%, var(--accent-soft), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 0%, var(--accent-2-soft), transparent 55%);
+  background-attachment: fixed;
   color: var(--ink);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem 2rem;
+  padding: 4.5rem 1.75rem 5rem;
   transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
 }
 .container {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1080px;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 2.75rem;
 }
 .header {
   text-align: center;
   animation: slideDown 0.6s var(--ease) forwards;
 }
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1.1rem;
+}
+.eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
 .header h1 {
-  font-size: 2.5rem;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
   font-weight: 600;
-  letter-spacing: -0.04em;
-  margin-bottom: 0.5rem;
+  font-size: 2.75rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.55rem;
 }
 .header p {
   color: var(--ink-muted);
-  font-size: 1.05rem;
+  font-size: 1.02rem;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+.rail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-top: 2.25rem;
+  animation: slideDown 0.7s var(--ease) forwards;
+}
+.rail-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+}
+.rail-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border-hover);
+  transition: all 0.4s var(--ease);
+}
+.rail-node span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  transition: color 0.4s var(--ease);
+}
+.rail-line {
+  width: 5.5rem;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: background 0.5s var(--ease);
+}
+.rail-node.is-active .rail-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft);
+}
+.rail-node.is-active span {
+  color: var(--ink);
+}
+.container:has(#outputSection:not(.hidden)) .rail-line:nth-of-type(1),
+.rail:has(~ #outputSection:not(.hidden)) {
+  background: var(--accent);
+}
+.container:has(#outputSection:not(.hidden)) .rail-node.node-transform .rail-dot,
+.container:has(#outputSection:not(.hidden)) .rail-node.node-deploy .rail-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft);
+}
+.container:has(#outputSection:not(.hidden)) .rail-node.node-transform span,
+.container:has(#outputSection:not(.hidden)) .rail-node.node-deploy span {
+  color: var(--ink);
+}
+.container:has(#outputSection:not(.hidden)) .rail-line {
+  background: var(--accent);
 }
 .dropzone {
   background: var(--surface);
-  border: 2px dashed var(--border);
+  border: 1.5px dashed var(--border-hover);
   border-radius: var(--radius-lg);
-  padding: 4rem 2rem;
+  padding: 3.75rem 2rem;
   text-align: center;
   cursor: pointer;
   box-shadow: var(--shadow);
@@ -84,42 +188,68 @@ body {
   position: relative;
   overflow: hidden;
 }
+.dropzone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent-soft), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
 .dropzone:hover, .dropzone.dragover {
   border-color: var(--accent);
-  background: var(--accent-soft);
   transform: translateY(-2px);
+}
+.dropzone:hover::before, .dropzone.dragover::before {
+  opacity: 1;
 }
 .dropzone input {
   display: none;
 }
 .dropzone svg {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   color: var(--accent);
-  margin-bottom: 1rem;
-  transition: transform 0.3s var(--ease);
+  margin-bottom: 1.1rem;
+  transition: transform 0.35s var(--ease);
+  position: relative;
 }
 .dropzone:hover svg {
-  transform: scale(1.08);
+  transform: translateY(-3px) scale(1.05);
 }
 .dropzone h3 {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 500;
+  position: relative;
+}
+.dropzone .sub {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  position: relative;
 }
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 600;
   margin-bottom: 1.25rem;
   color: var(--ink);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+}
+.section-title::before {
+  content: "";
+  width: 3px;
+  height: 1.05rem;
+  border-radius: 2px;
+  background: var(--accent);
+  display: inline-block;
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.35rem;
 }
 .card {
   background: var(--surface);
@@ -128,48 +258,67 @@ body {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow);
-  transition: border-color 0.3s var(--ease);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
 }
 .card:hover {
   border-color: var(--border-hover);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
 }
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  gap: 0.75rem;
 }
 .card-header h2 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--ink);
 }
+.badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  margin-left: 0.55rem;
+  vertical-align: middle;
+}
+.badge-modern { color: var(--accent); background: var(--accent-soft); }
+.badge-raw { color: var(--ink-muted); background: var(--surface-alt); }
+.badge-legacy { color: var(--accent-2); background: var(--accent-2-soft); }
 button {
   background: var(--bg);
   color: var(--ink);
   border: 1px solid var(--border);
-  padding: 0.5rem 1rem;
+  padding: 0.48rem 0.95rem;
   border-radius: var(--radius-sm);
   font-weight: 500;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-family: inherit;
   cursor: pointer;
   transition: all 0.2s var(--ease);
+  flex-shrink: 0;
 }
 button:hover {
   border-color: var(--accent);
   color: var(--accent);
+  background: var(--accent-soft);
 }
 textarea {
   width: 100%;
-  height: 200px;
-  background: var(--bg);
+  height: 190px;
+  background: var(--surface-alt);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--ink);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
   padding: 1rem;
   resize: none;
   outline: none;
@@ -177,21 +326,31 @@ textarea {
 }
 textarea:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .injector-card {
   text-align: center;
+  align-items: center;
   justify-content: center;
-  padding: 2.5rem 1.5rem;
+  padding: 2.25rem 1.5rem;
   cursor: pointer;
+  gap: 0.15rem;
 }
 .injector-card:hover {
   border-color: var(--accent);
-  background: var(--accent-soft);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+.injector-card svg {
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+  margin-bottom: 0.65rem;
 }
 .injector-card p {
   color: var(--ink-muted);
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
 }
 .hidden {
   display: none !important;
@@ -226,11 +385,11 @@ textarea:focus {
   bottom: 2rem;
   background: var(--ink);
   color: var(--bg);
-  padding: 0.875rem 1.5rem;
+  padding: 0.85rem 1.4rem;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   transform: translateY(100px);
   opacity: 0;
   transition: all 0.4s var(--ease);
@@ -241,19 +400,42 @@ textarea:focus {
   transform: translateY(0);
   opacity: 1;
 }
+@media (max-width: 640px) {
+  .header h1 { font-size: 2.1rem; }
+  .rail-line { width: 2.75rem; }
+  .dropzone { padding: 2.75rem 1.5rem; }
+}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
+    <span class="eyebrow">Excel → Structured Data</span>
     <h1>Lx Data Converter</h1>
-    <p>Seamlessly process and inject Excel data.</p>
+    <p>Turn a spreadsheet into clean, ready-to-ship JSON — then push it straight into your app.</p>
+  </div>
+  <div class="rail">
+    <div class="rail-node node-source is-active">
+      <div class="rail-dot"></div>
+      <span>Source</span>
+    </div>
+    <div class="rail-line"></div>
+    <div class="rail-node node-transform">
+      <div class="rail-dot"></div>
+      <span>Transform</span>
+    </div>
+    <div class="rail-line"></div>
+    <div class="rail-node node-deploy">
+      <div class="rail-dot"></div>
+      <span>Deploy</span>
+    </div>
   </div>
   <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
     </svg>
     <h3 id="dropText">Click or drop .xlsx file to begin</h3>
+    <p class="sub">Reads the first sheet · maps columns automatically</p>
     <input type="file" id="fileInput" accept=".xlsx, .xls">
   </div>
   <div id="outputSection" class="hidden">
@@ -261,21 +443,21 @@ textarea:focus {
     <div class="grid">
       <div class="card">
         <div class="card-header">
-          <h2>Modern (Paid + Free)</h2>
+          <h2>Modern<span class="badge badge-modern">Paid + Free</span></h2>
           <button id="btnModern">Copy</button>
         </div>
         <textarea id="outModern" readonly></textarea>
       </div>
       <div class="card">
         <div class="card-header">
-          <h2>Raw Paid</h2>
+          <h2>Raw<span class="badge badge-raw">Paid</span></h2>
           <button id="btnRaw">Copy</button>
         </div>
         <textarea id="outRaw" readonly></textarea>
       </div>
       <div class="card">
         <div class="card-header">
-          <h2>Legacy Free</h2>
+          <h2>Legacy<span class="badge badge-legacy">Free</span></h2>
           <button id="btnLegacy">Copy</button>
         </div>
         <textarea id="outLegacy" readonly></textarea>
@@ -286,16 +468,19 @@ textarea:focus {
     <h2 class="section-title">Inject & Download</h2>
     <div class="grid">
       <div class="card injector-card" onclick="document.getElementById('htmlModern').click()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8.25 3v2.25M15.75 3v2.25M5.25 6.75h13.5A1.5 1.5 0 0120.25 8.25v10.5a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5z" /></svg>
         <h2>Modern HTML</h2>
         <p>Upload file to inject</p>
         <input type="file" id="htmlModern" accept=".html" class="hidden" onchange="handleHTMLUpload(event, 'modern')">
       </div>
       <div class="card injector-card" onclick="document.getElementById('htmlRaw').click()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8.25 3v2.25M15.75 3v2.25M5.25 6.75h13.5A1.5 1.5 0 0120.25 8.25v10.5a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5z" /></svg>
         <h2>Raw Paid HTML</h2>
         <p>Upload file to inject</p>
         <input type="file" id="htmlRaw" accept=".html" class="hidden" onchange="handleHTMLUpload(event, 'raw')">
       </div>
       <div class="card injector-card" onclick="document.getElementById('htmlLegacy').click()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8.25 3v2.25M15.75 3v2.25M5.25 6.75h13.5A1.5 1.5 0 0120.25 8.25v10.5a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5z" /></svg>
         <h2>Legacy HTML</h2>
         <p>Upload file to inject</p>
         <input type="file" id="htmlLegacy" accept=".html" class="hidden" onchange="handleHTMLUpload(event, 'legacy')">
